@@ -25,7 +25,7 @@ Before running the script, ensure you have the following installed:
 2. **Make the Script Executable**
 
    ```bash
-   chmod +x setup_vm.sh
+   chmod +x startup-script.sh
    ```
 
 3. **Run the Script**
