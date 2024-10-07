@@ -50,7 +50,21 @@ echo $current_project
 
 # Capture current region
 current_region=$(gcloud config get-value compute/region) || { echo "Failed to capture region"; exit 1; }
+if [ -z "$current_region" ]; then
+  gcloud config set compute/zone europe-west-2
+  echo "Zone was not set. Defaulting to europe-west2."
+else
+  echo "Current zone is $current_zone."
+fi
+
 current_zone=$(gcloud config get-value compute/zone) || { echo "Failed to capture zone"; exit 1; }
+
+if [ -z "$current_zone" ]; then
+  gcloud config set compute/zone europe-west-2
+  echo "Zone was not set. Defaulting to europe-west2-b."
+else
+  echo "Current zone is $current_zone."
+fi
 
 
 # Connect billing account
