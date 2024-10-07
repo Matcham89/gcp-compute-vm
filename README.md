@@ -78,7 +78,7 @@ The script connects to the newly created VM using SSH.
 
 To avoid incurring charges to your Google Cloud account for the resources used on this page, delete the Google Cloud project with the resources.
 
-In the Shell, run the following command to delete the Terraform resources:
+The Shell will run the following command to delete the Terraform resources when you disconnect from your VM:
 
 ```bash
 terraform destroy

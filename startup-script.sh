@@ -80,8 +80,22 @@ export TF_VAR_zone=$current_zone
 
 terraform init || { echo "Terraform init failed"; exit 1; }
 terraform plan || { echo "Terraform plan failed"; exit 1; }
-terraform apply || { echo "Terraform apply failed"; exit 1; }
+terraform apply -auto-approve || { echo "Terraform apply failed"; exit 1; }
 
 
 echo "Connecting to new VM"
 gcloud compute ssh --zone=$current_zone $current_project"-vm" || { echo "Failed to connect to VM"; exit 1; }
+
+
+
+# Clean Up 
+echo ""
+echo "You have exit your compute vm, clean will now begin"
+sleep 5
+
+export TF_VAR_project_id=$current_project
+export TF_VAR_compute_name=$current_project"-vm"
+export TF_VAR_region=$current_region
+export TF_VAR_zone=$current_zone
+
+terraform destroy -auto-approve || { echo "Terraform destroy failed"; exit 1; }
