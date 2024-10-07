@@ -90,7 +90,7 @@ gcloud compute ssh --zone=$current_zone $current_project"-vm" || { echo "Failed 
 
 # Clean Up 
 echo ""
-echo "You have exit your compute vm, clean will now begin"
+echo "You have exit your compute vm, clean up will now begin"
 sleep 5
 
 export TF_VAR_project_id=$current_project
