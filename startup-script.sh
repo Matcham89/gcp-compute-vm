@@ -84,4 +84,4 @@ terraform apply || { echo "Terraform apply failed"; exit 1; }
 
 
 echo "Connecting to new VM"
-gcloud compute ssh --zone=us-central1-a chris-matcham-demo || { echo "Failed to connect to VM"; exit 1; }
+gcloud compute ssh --zone=$current_zone $current_project"-vm" || { echo "Failed to connect to VM"; exit 1; }
