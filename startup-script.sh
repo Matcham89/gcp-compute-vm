@@ -9,6 +9,22 @@ handle_error() {
 # Trap errors and call handle_error
 trap 'handle_error $LINENO' ERR
 
+# Check if gcloud is installed
+if ! command -v gcloud &> /dev/null; then
+    echo "gcloud not found. Please install gcloud before running this script."
+    exit 1
+else
+    echo "gcloud is already installed"
+fi
+
+# Check if terraform is installed
+if ! command -v terraform &> /dev/null; then
+    echo "terraform not found. Please install terraform before running this script."
+    exit 1
+else
+    echo "terraform is already installed"
+fi
+
 # Connect to Google Cloud
 echo "Connecting to Google Cloud"
 gcloud init || { echo "Failed to initialize gcloud"; exit 1; }
