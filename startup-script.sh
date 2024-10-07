@@ -27,62 +27,62 @@ else
     echo "terraform is already installed"
 fi
 
-# Connect to Google Cloud
-echo ""
-echo "Connecting to Google Cloud"
-echo ""
-echo "!Please read the options and select as needed!"
-echo ""
+# Set project id
+random_string=$(openssl rand -hex 5)
+current_project="vm-quickstart-${random_string}"
+gcloud projects create $current_project
+gcloud config set project $current_project
 
-echo "For Compute Region and Zone select the relevant option"
-
-echo ""
-
-echo "Connect CLI"
-sleep 3
-# Connect to console from CLI
-gcloud auth application-default login
-
-
-
-gcloud init --skip-diagnostics || { echo "Failed to initialize gcloud"; exit 1; }
 
 # Capture project id
-echo "Capturing current project"
+echo "capturing current project"
 current_project=$(gcloud config get-value project) || { echo "Failed to capture project"; exit 1; }
 echo $current_project
 
+echo "connect gcloud CLI"
+sleep 3
+# Connect to console from CLI
+gcloud auth application-default login
+gcloud auth application-default set-quota-project $current_project
+
 # Capture current region
 current_region=$(gcloud config get-value compute/region) || { echo "Failed to capture region"; exit 1; }
+
+# If no region is set, default to europe-west2
 if [ -z "$current_region" ]; then
-  gcloud config set compute/zone europe-west-2
-  echo "Zone was not set. Defaulting to europe-west2."
+  gcloud config set compute/region europe-west2
+  echo "Region was not set. Defaulting to europe-west2."
 else
-  echo "Current zone is $current_zone."
+  echo "Current region is $current_region."
 fi
 
+# Capture current zone
 current_zone=$(gcloud config get-value compute/zone) || { echo "Failed to capture zone"; exit 1; }
 
+# If no zone is set, default to europe-west2-b
 if [ -z "$current_zone" ]; then
-  gcloud config set compute/zone europe-west-2
+  gcloud config set compute/zone europe-west2-b
   echo "Zone was not set. Defaulting to europe-west2-b."
 else
   echo "Current zone is $current_zone."
 fi
 
-# Enable compute services API
-gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
-echo "enable compute.googleapis.com API"
-sleep 3
 
 # Connect billing account
+echo "enable billing"
 billing_account=$(gcloud billing accounts list --filter="open=true" --format="value(ACCOUNT_ID)")
 gcloud billing projects link $current_project --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
-echo "enable billing"
 sleep 3
 
+# Enable compute services API
+echo "enable compute.googleapis.com API"
+gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
+sleep 3
+
+
+
 # Enter user email address
-echo "Capturing Email Address"
+echo "capturing email address"
 current_account=$(gcloud auth list --filter=status:ACTIVE --format="value(account)") || { echo "Failed to capture account"; exit 1; }
 echo $current_account
 
@@ -90,8 +90,8 @@ echo $current_account
 # Set user permissions
 gcloud projects add-iam-policy-binding $current_project --member="user:${current_account}" --role=roles/compute.instanceAdmin.v1 || { echo "Failed to add IAM policy binding"; exit 1; }
 
-echo "Google Cloud settings configured"
 echo "Applying Terraform!"
+sleep 1
 
 export TF_VAR_project_id=$current_project
 export TF_VAR_compute_name=$current_project"-vm"

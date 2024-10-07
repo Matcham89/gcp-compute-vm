@@ -13,7 +13,7 @@ variable "zone" {
 resource "google_compute_instance" "default" {
   project = var.project_id
   name         = var.compute_name
-  machine_type = "n1-standard-1"
+  machine_type = "e2-micro"
   zone         = var.zone
 
   boot_disk {
