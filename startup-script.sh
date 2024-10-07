@@ -30,21 +30,22 @@ echo "Connecting to Google Cloud"
 gcloud init || { echo "Failed to initialize gcloud"; exit 1; }
 
 # Enter project id
-echo "Please re-enter project ID"
+echo "Capturing current project"
+current_project=$(gcloud config get-value project) || { echo "Failed to capture project"; exit 1; }
 
 # Connect billing account
 billing_account=$(gcloud alpha billing accounts list --filter="open=true" --format="value(ACCOUNT_ID)")
-gcloud billing projects link $project_id --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
+gcloud billing projects link $current_project --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
 
 # Enable compute services API
 gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
 
 # Enter user email address
-echo "Enter user email address"
-read email
+echo "Capturing Email Address"
+current_account=$(gcloud auth list --filter=status:ACTIVE --format="value(account)") || { echo "Failed to capture account"; exit 1; }
 
 # Set user permissions
-gcloud projects add-iam-policy-binding $project_id --member="user:${email}" --role=roles/compute.instanceAdmin.v1 || { echo "Failed to add IAM policy binding"; exit 1; }
+gcloud projects add-iam-policy-binding $current_project --member="user:${current_account}" --role=roles/compute.instanceAdmin.v1 || { echo "Failed to add IAM policy binding"; exit 1; }
 
 echo "Google Cloud settings configured"
 echo "Applying Terraform!"
