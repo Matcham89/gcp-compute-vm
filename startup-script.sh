@@ -121,3 +121,8 @@ export TF_VAR_region=$current_region
 export TF_VAR_zone=$current_zone
 
 terraform destroy -auto-approve || { echo "Terraform destroy failed"; exit 1; }
+
+echo "close project"
+gcloud projects delete $current_project
+
+echo "clean up complete"
