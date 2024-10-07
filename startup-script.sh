@@ -66,13 +66,16 @@ else
   echo "Current zone is $current_zone."
 fi
 
+# Enable compute services API
+gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
+echo "enable compute.googleapis.com API"
+sleep 3
 
 # Connect billing account
 billing_account=$(gcloud billing accounts list --filter="open=true" --format="value(ACCOUNT_ID)")
 gcloud billing projects link $current_project --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
-
-# Enable compute services API
-gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
+echo "enable billing"
+sleep 3
 
 # Enter user email address
 echo "Capturing Email Address"
