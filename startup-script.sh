@@ -40,6 +40,7 @@ current_project=$(gcloud config get-value project) || { echo "Failed to capture 
 echo $current_project
 
 echo "connect gcloud CLI"
+echo "answer 'Y' for all follow prompts"
 sleep 3
 # Connect to console from CLI
 gcloud auth application-default login
