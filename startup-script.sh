@@ -33,8 +33,8 @@ gcloud init || { echo "Failed to initialize gcloud"; exit 1; }
 echo "Please re-enter project ID"
 
 # Connect billing account
-billing_account=${gcloud alpha billing accounts list --filter="open=true"}
-gcloud beta billing projects link $project_id --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
+billing_account=$(gcloud alpha billing accounts list --filter="open=true" --format="value(ACCOUNT_ID)")
+gcloud billing projects link $project_id --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
 
 # Enable compute services API
 gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
