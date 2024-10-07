@@ -29,13 +29,12 @@ fi
 echo "Connecting to Google Cloud"
 gcloud init || { echo "Failed to initialize gcloud"; exit 1; }
 
-# Create a Google project
-echo "Enter Project Name"
-read project_id
+# Enter project id
+echo "Please re-enter project ID"
 
-echo "Creating project '${project_id}'"
-gcloud projects create $project_id || { echo "Failed to create project"; exit 1; }
-gcloud config set project $project_id || { echo "Failed to set project"; exit 1; }
+# Connect billing account
+billing_account=${gcloud alpha billing accounts list --filter="open=true"}
+gcloud beta billing projects link $project_id --billing-account $billing_account || { echo "Failed to enable billing"; exit 1; }
 
 # Enable compute services API
 gcloud services enable compute.googleapis.com || { echo "Failed to enable compute services"; exit 1; }
