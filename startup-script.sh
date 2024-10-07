@@ -37,13 +37,15 @@ echo ""
 echo "For Compute Region and Zone select the relevant option"
 
 echo ""
-sleep 5
-gcloud init --skip-diagnostics || { echo "Failed to initialize gcloud"; exit 1; }
 
+echo "Connect CLI"
+sleep 3
 # Connect to console from CLI
 gcloud auth application-default login
-sleep 5
-echo "wait for project creation"
+
+
+
+gcloud init --skip-diagnostics || { echo "Failed to initialize gcloud"; exit 1; }
 
 # Capture project id
 echo "Capturing current project"
