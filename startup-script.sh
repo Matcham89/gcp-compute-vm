@@ -42,6 +42,8 @@ gcloud init --skip-diagnostics || { echo "Failed to initialize gcloud"; exit 1; 
 
 # Connect to console from CLI
 gcloud auth application-default login
+sleep 5
+echo "wait for project creation"
 
 # Capture project id
 echo "Capturing current project"
